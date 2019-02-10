@@ -52,10 +52,18 @@ class ArrayBuilder implements ArrayBuilderInterface
     private function applyFilters($builder, $filters)
     {
         foreach ($filters as $filter => $value) {
+            //Skip filter with no value
             if ($value === null) continue;
+
+            if (strpos($filter, ':') === false) {
+                $filter = 'eq:' . $filter;
+            }
+
             $filterName = $this->extractFilterName($filter);
             $filterClass = $this->existingFilters[$filterName] ?? null;
             if (!$filterClass) throw new FilterNotExist($filterName);
+
+
             (new $filterClass)->apply($builder, $value, $this->extractParams($filter));
         }
     }

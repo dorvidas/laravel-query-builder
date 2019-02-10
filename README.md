@@ -4,7 +4,7 @@ This package allows you to filter and include eloquent relations based on a requ
 
 ## Basic usage
 
-Filtering an API request: `/users?filter[eq:active]=1`:
+Filtering an API request by checking if column equals to value: `/users?filter[eq:active]=1` or `/users?filter[active]=1`(if no filter defined, the default `eq` filter is used):
 
 ```php
 $users = Users::buildFromRequest()
@@ -108,6 +108,9 @@ class RecentFilter implements FilterInterface
 
 #### GOTCHAs
 Filters with no values are not applied i.e `$filter[eq:id]=`. Laravel application converts empty query params to `null` values by using `\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class` middleware and to filter rows where columns is `null` use `n:your_col=1` filter. Reason for that is when using documentation tools like Swagger I list all possible filters for endpoint and when value is not present I want to skip it.
+
+### Including relations
+TODO
 
 ### Manually building query
 It is also possible to build query manually by using `buildFromArray` macro and passing instance of `\Dorvidas\QueryBuilder\ArrayBuilder` to it:
