@@ -82,7 +82,14 @@ JSON:API is agnostic to filtering strategy. The only requirement that filter wou
 * `&filter[posts.eq:id]=1` - define filter for relation `posts`. If relation is deep we define full path to it `posts.comments.eq:id=1`.
 
 #### Create filters
-If you need to create custom filter append the config. Filter should implement `
+If you need to create custom filter append the config. 
+```php
+'filters' => [
+     /* ... */
+    'recent' => \App\Filters\RecentFilter::class,
+```
+
+Filter should implement `
 Dorvidas\QueryBuilder\FiltersFilterInterface` interface. Example filter:
 ```php
 use Carbon\Carbon;
