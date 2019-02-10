@@ -2,6 +2,8 @@
 
 namespace Dorvidas\QueryBuilder\Transformers;
 
+use http\Params;
+
 class JsonApiTransformer implements TransformerInterface
 {
     protected $data;
@@ -43,8 +45,16 @@ class JsonApiTransformer implements TransformerInterface
 
         $includesArray = strpos($this->data['include'], ',') ? explode(',', $this->data['include']) : [$this->data['include']];
 
-        foreach ($includesArray as $include) {
-            $includes[$include] = $this->getFiltersForInclude($include);
+        foreach ($includesArray as $dotIncludes) {
+            $parts = explode('.', $dotIncludes);
+            $include = '';
+            foreach ($parts as $part) {
+                $include = trim($include . '.' . $part, '.');
+                if (!isset($includes[$include])) {
+                    $includes[$include] = $this->getFiltersForInclude($include);
+                }
+
+            }
         }
 
         return $includes;
@@ -61,8 +71,12 @@ class JsonApiTransformer implements TransformerInterface
         if (!isset($this->data['filters'])) return $filters;
 
         foreach ($this->data['filters'] as $filter => $params) {
-            if (($pos = strrpos($filter, '.')) == true
-                && substr($include, 0, $pos) == $include) {
+            //Filter of include should have dot
+            if (($pos = strrpos($filter, '.')) === false) {
+                continue;
+            }
+
+            if (substr($filter, 0, $pos) == $include) {
                 $filters[substr($filter, $pos + 1)] = $params;
             }
         }

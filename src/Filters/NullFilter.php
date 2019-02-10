@@ -4,12 +4,9 @@ namespace Dorvidas\QueryBuilder\Filters;
 
 class NullFilter implements FilterInterface
 {
-    public function apply($query, $col, $value)
+    public function apply($query, $value, $params)
     {
-        if ($value) {
-            $query->whereNull($col);
-        } else {
-            $query->whereNotNull($col);
-        }
+        $col = $params[0];
+        $query->whereNull($col);
     }
 }

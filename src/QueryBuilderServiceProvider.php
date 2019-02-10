@@ -15,6 +15,13 @@ class QueryBuilderServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../config/query-builder.php' => config_path('query-builder.php'),
+            ], 'config');
+        }
+        $this->mergeConfigFrom(__DIR__.'/../config/query-builder.php', 'query-builder');
+
         Builder::macro('buildFromArray', function (ArrayBuilder $builder) {
             $builder->build($this);
             return $this;

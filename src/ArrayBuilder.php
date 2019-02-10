@@ -2,25 +2,17 @@
 
 namespace Dorvidas\QueryBuilder;
 
-use Dorvidas\QueryBuilder\Filters\EqFilter;
-use Dorvidas\QueryBuilder\Filters\GreaterThanFilter;
-use Dorvidas\QueryBuilder\Filters\InFilter;
-use Dorvidas\QueryBuilder\Filters\LikeFilter;
-use Dorvidas\QueryBuilder\Filters\LowerThanFilter;
-use Dorvidas\QueryBuilder\Filters\NullFilter;
+use Dorvidas\QueryBuilder\Exceptions\FilterNotExist;
 
 class ArrayBuilder implements ArrayBuilderInterface
 {
     protected $filters = [];
     protected $includeFilters = [];
-    protected $existingFilters = [
-        'eq' => EqFilter::class,
-        'in' => InFilter::class,
-        'gt' => GreaterThanFilter::class,
-        'lt' => LowerThanFilter::class,
-        'like' => LikeFilter::class,
-        'n' => NullFilter::class
-    ];
+
+    public function __construct()
+    {
+        $this->existingFilters = config('query-builder.filters');
+    }
 
     /**
      * @param array $filters
@@ -59,12 +51,29 @@ class ArrayBuilder implements ArrayBuilderInterface
 
     private function applyFilters($builder, $filters)
     {
-        foreach ($filters as $filter => $cols) {
-            $filterClass = $this->existingFilters[$filter] ?? null;
-            if (!$filterClass) throw new \Exception('No such filter');
-            foreach ($cols as $col => $value) {
-                (new $filterClass)->apply($builder, $col, $value);
-            }
+        foreach ($filters as $filter => $value) {
+            if ($value === null) continue;
+            $filterName = $this->extractFilterName($filter);
+            $filterClass = $this->existingFilters[$filterName] ?? null;
+            if (!$filterClass) throw new FilterNotExist($filterName);
+            (new $filterClass)->apply($builder, $value, $this->extractParams($filter));
+        }
+    }
+
+    private function extractParams($filterWithParams)
+    {
+        if (($filterNameEnds = strpos($filterWithParams, ':')) === false) {
+            return [];
+        }
+        return explode(',', substr($filterWithParams, $filterNameEnds + 1));
+    }
+
+    private function extractFilterName($filterWithParams)
+    {
+        if (($filterNameEnds = strpos($filterWithParams, ':')) === false) {
+            return $filterWithParams;
+        } else {
+            return substr($filterWithParams, 0, $filterNameEnds);
         }
     }
 

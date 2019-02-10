@@ -4,5 +4,5 @@ namespace Dorvidas\QueryBuilder\Filters;
 
 interface FilterInterface
 {
-    public function apply($query, $col, $value);
+    public function apply($query, $value, $params);
 }
