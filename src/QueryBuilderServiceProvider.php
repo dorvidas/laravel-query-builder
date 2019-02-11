@@ -3,8 +3,7 @@
 namespace Dorvidas\QueryBuilder;
 
 use Illuminate\Support\ServiceProvider;
-use \Illuminate\Database\Eloquent\Builder;
-
+use Illuminate\Database\Eloquent\Builder;
 
 class QueryBuilderServiceProvider extends ServiceProvider
 {

@@ -23,9 +23,9 @@ class JsonApiTransformer implements TransformerInterface
     public function filters(): array
     {
         $filters = [];
-        if (!isset($this->data['filters'])) return $filters;
+        if (!isset($this->data['filter'])) return $filters;
 
-        foreach ($this->data['filters'] as $filter => $params) {
+        foreach ($this->data['filter'] as $filter => $params) {
             if (strpos($filter, '.') === false) {
                 $filters[$filter] = $params;
             }
