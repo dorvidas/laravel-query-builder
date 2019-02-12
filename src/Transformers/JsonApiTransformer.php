@@ -68,9 +68,9 @@ class JsonApiTransformer implements TransformerInterface
     {
         $filters = [];
 
-        if (!isset($this->data['filters'])) return $filters;
+        if (!isset($this->data['filter'])) return $filters;
 
-        foreach ($this->data['filters'] as $filter => $params) {
+        foreach ($this->data['filter'] as $filter => $params) {
             //Filter of include should have dot
             if (($pos = strrpos($filter, '.')) === false) {
                 continue;
