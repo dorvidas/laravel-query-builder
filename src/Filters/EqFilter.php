@@ -10,7 +10,7 @@ class EqFilter implements FilterInterface
      * @param $value
      * @param array $params
      */
-    public function apply($query, $value, array $params): void
+    public function apply($query, $value = null, array $params): void
     {
         $col = $params[0];
         $query->where($col, '=', $value);

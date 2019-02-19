@@ -9,5 +9,5 @@ interface FilterInterface
      * @param $value
      * @param array $params
      */
-    public function apply($query, $value, array $params): void;
+    public function apply($query, $value = null, array $params): void;
 }
