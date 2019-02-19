@@ -1,6 +1,6 @@
 <?php
 
-namespace Dorvidas\QueryBuilder\Tests\Filters;
+namespace Dorvidas\QueryBuilder\Tests\Unit\Filters;
 
 use Dorvidas\QueryBuilder\Filters\LowerThanEqualFilter;
 use Dorvidas\QueryBuilder\Tests\TestCase;

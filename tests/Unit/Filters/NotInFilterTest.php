@@ -1,12 +1,12 @@
 <?php
 
-namespace Dorvidas\QueryBuilder\Tests\Filters;
+namespace Dorvidas\QueryBuilder\Tests\Unit\Filters;
 
-use Dorvidas\QueryBuilder\Filters\InFilter;
+use Dorvidas\QueryBuilder\Filters\NotInFilter;
 use Dorvidas\QueryBuilder\Tests\TestCase;
 use Illuminate\Database\Eloquent\Builder;
 
-class InFilterTest extends TestCase
+class NotInFilterTest extends TestCase
 {
     protected $subject;
     protected $builder;
@@ -15,16 +15,16 @@ class InFilterTest extends TestCase
     {
         parent::setUp();
 
-        $this->subject = new InFilter();
+        $this->subject = new NotInFilter();
         $this->builder = \Mockery::mock(Builder::class);
     }
 
     /** @test */
-    public function in_filter_works()
+    public function not_in_filter_works()
     {
         $value = [1, 2];
         $args = ['col'];
-        $this->builder->shouldReceive('whereIn')->once()->withArgs([$args[0], $value]);
+        $this->builder->shouldReceive('whereNotIn')->once()->withArgs([$args[0], $value]);
         $this->subject->apply($this->builder, $value, $args);
     }
 
@@ -33,7 +33,7 @@ class InFilterTest extends TestCase
     {
         $value = '1,2';
         $args = ['col'];
-        $this->builder->shouldReceive('whereIn')->once()->withArgs([$args[0], explode(',', $value)]);
+        $this->builder->shouldReceive('whereNotIn')->once()->withArgs([$args[0], explode(',', $value)]);
         $this->subject->apply($this->builder, $value, $args);
     }
 }

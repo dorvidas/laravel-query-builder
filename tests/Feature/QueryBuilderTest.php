@@ -1,10 +1,11 @@
 <?php
 
-namespace Dorvidas\QueryBuilder\Tests;
+namespace Dorvidas\QueryBuilder\Feature\Tests;
 
 use Dorvidas\QueryBuilder\Tests\Models\CommentModel;
 use Dorvidas\QueryBuilder\Tests\Models\PostModel;
 use Dorvidas\QueryBuilder\Tests\Models\UserModel;
+use Dorvidas\QueryBuilder\Tests\TestCase;
 
 class QueryBuilderTest extends TestCase
 {
