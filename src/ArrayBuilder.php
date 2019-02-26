@@ -6,6 +6,7 @@ use Dorvidas\QueryBuilder\Exceptions\FilterNotExist;
 
 class ArrayBuilder implements ArrayBuilderInterface
 {
+    protected $existingFilters = [];
     protected $filters = [];
     protected $includeFilters = [];
 
