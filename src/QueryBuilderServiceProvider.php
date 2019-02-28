@@ -16,21 +16,31 @@ class QueryBuilderServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/query-builder.php' => config_path('query-builder.php'),
+                __DIR__ . '/../config/query-builder.php' => config_path('query-builder.php'),
             ], 'config');
         }
-        $this->mergeConfigFrom(__DIR__.'/../config/query-builder.php', 'query-builder');
+        $this->mergeConfigFrom(__DIR__ . '/../config/query-builder.php', 'query-builder');
 
         Builder::macro('buildFromArray', function (ArrayBuilder $builder) {
             $builder->build($this);
+
             return $this;
         });
-        Builder::macro('buildFromRequest', function () {
+        Builder::macro('buildFromRequest', function (Constraints $constraints = null) {
             $transformer = (new \Dorvidas\QueryBuilder\Transformers\JsonApiTransformer(request()->input()));
+
+            $filters = $transformer->filters();
+            $includes = $transformer->includes();
+
+            if ($constraints) {
+                $constraints->checkIncludes($includes);
+            }
+
             (new \Dorvidas\QueryBuilder\ArrayBuilder)
-                ->filters($transformer->filters())
-                ->includes($transformer->includes())
+                ->filters($filters)
+                ->includes($includes)
                 ->build($this);
+
             return $this;
         });
     }

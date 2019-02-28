@@ -2,6 +2,8 @@
 
 namespace Dorvidas\QueryBuilder\Feature\Tests;
 
+use Dorvidas\QueryBuilder\Constraints;
+use Dorvidas\QueryBuilder\Exceptions\IncludeNotAllowedException;
 use Dorvidas\QueryBuilder\Tests\Models\CommentModel;
 use Dorvidas\QueryBuilder\Tests\Models\PostModel;
 use Dorvidas\QueryBuilder\Tests\Models\UserModel;
@@ -75,5 +77,13 @@ class QueryBuilderTest extends TestCase
         }])->get()->toArray();
 
         $this->assertEquals($expected, UserModel::buildFromRequest()->get()->toArray());
+    }
+
+    /** @test */
+    public function it_throw_exception_if_there_are_include_constrains_and_include_not_allowed()
+    {
+        $this->getJson('/users?include=posts');
+        $this->expectException(IncludeNotAllowedException::class);
+        UserModel::buildFromRequest((new Constraints())->allowIncludes([]))->get()->toArray();
     }
 }

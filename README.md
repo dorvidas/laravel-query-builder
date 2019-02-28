@@ -7,7 +7,7 @@ This package allows you to filter and include eloquent relations based on a requ
 Filtering an API request by checking if column equals to value: `/users?filter[eq:active]=1` or `/users?filter[active]=1`(if no filter defined, the default `eq` filter is used):
 
 ```php
-$users = Users::buildFromRequest()
+$users = User::buildFromRequest()
     ->get();
 // all `User`s that with columns `active` equal to 1
 ```
@@ -15,7 +15,7 @@ $users = Users::buildFromRequest()
 Requesting filtered relations from an API request: `/users?filter[posts.eq:published]=1&include=posts`:
 
 ```php
-$users = Users::buildFromRequest()
+$users = User::buildFromRequest()
     ->get();
 // all `User`s with their published `posts` loaded
 ```
@@ -23,7 +23,7 @@ $users = Users::buildFromRequest()
 Requesting deep relations filtered from an API request: `/users?filter[posts.comments.eq:approved=1&include=posts.comments`:
 
 ```php
-$users = Users::buildFromRequest()
+$users = User::buildFromRequest()
     ->get();
 // all `User`s with their `posts` and post `comments` that are approved
 ```
@@ -31,7 +31,7 @@ $users = Users::buildFromRequest()
 Works together nicely with existing queries, because `buildFromRequest` is basically Eloquent macro: `/users?filter[eq:name]=John`:
 
 ```php
-$users = Users::buildFromRequest()
+$users = User::buildFromRequest()
     ->where('active', 1)
     ->get();
 // all `User`s whose name is `John` also enforcing them to be active users
@@ -97,7 +97,6 @@ use Dorvidas\QueryBuilder\Filters\FilterInterface;
 
 class RecentFilter implements FilterInterface
 {
-
     public function apply($query, $value, $params)
     {
         $col = isset($params[0]) ? $params[0] : 'created_at';
@@ -110,7 +109,30 @@ class RecentFilter implements FilterInterface
 Filters with no values are not applied i.e `$filter[eq:id]=`. Laravel application converts empty query params to `null` values by using `\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class` middleware and to filter rows where columns is `null` use `n:your_col=1` filter. Reason for that is when using documentation tools like Swagger I list all possible filters for endpoint and when value is not present I want to skip it.
 
 ### Including relations
-TODO
+JSON:API allows request for [related resources](https://jsonapi.org/format/#fetching-includes). This is done via `include` query param i.e. `/users?include=posts`:
+
+```php
+$users = User::buildFromRequest()
+    ->get();
+// all `User`s with their `posts`
+// User model needs to have relation `posts`
+```
+
+#### Include constraints
+It is possible to add constraints on which includes are allowed. Without it you can request for everything as long as there are requested relation defined i.e. `/users?include=posts`:
+```php
+//This is fine
+$users = User::buildFromRequest((new Constraints())->allowIncludes(['posts']))
+    ->get();
+    
+//This is also fine
+$users = User::buildFromRequest((new Constraints())->allowIncludes(['posts.comments']))
+    ->get();
+
+// This will throw `IncludeNotAllowedException` exception because no relations allowed
+$users = User::buildFromRequest((new Constraints())->allowIncludes([]))
+    ->get();
+```
 
 ### Manually building query
 It is also possible to build query manually by using `buildFromArray` macro and passing instance of `\Dorvidas\QueryBuilder\ArrayBuilder` to it:
