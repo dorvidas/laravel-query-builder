@@ -2,8 +2,6 @@
 
 namespace Dorvidas\QueryBuilder\Transformers;
 
-use http\Params;
-
 class JsonApiTransformer implements TransformerInterface
 {
     protected $data;
