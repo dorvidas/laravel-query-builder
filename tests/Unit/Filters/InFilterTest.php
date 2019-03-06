@@ -11,7 +11,7 @@ class InFilterTest extends TestCase
     protected $subject;
     protected $builder;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
