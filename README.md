@@ -1,6 +1,8 @@
 # Easily build Eloquent queries from API requests
-
 [![Build Status](https://travis-ci.org/dorvidas/laravel-query-builder.svg?branch=master)](https://travis-ci.org/dorvidas/laravel-query-builder)
+[![Latest Stable Version](https://poser.pugx.org/dorvidas/laravel-query-builder/v/stable)](https://packagist.org/packages/dorvidas/laravel-query-builder)
+[![Total Downloads](https://poser.pugx.org/dorvidas/laravel-query-builder/downloads)](https://packagist.org/packages/dorvidas/laravel-query-builder)
+[![License](https://poser.pugx.org/dorvidas/laravel-query-builder/license)](https://packagist.org/packages/dorvidas/laravel-query-builder)
 
 This package allows you to filter and include eloquent relations based on a request. Filtering is possible even on relations. Query parameter names follow the [JSON API specification](https://jsonapi.org/) as closely as possible.
 
